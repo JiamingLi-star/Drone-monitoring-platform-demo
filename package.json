@@ -1,0 +1,18 @@
+{
+  "name": "drone-monitoring-platform-demo",
+  "version": "1.0.0",
+  "description": "Lightweight telemetry ingestion demo for UAS data.",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "keywords": [
+    "uas",
+    "telemetry",
+    "http",
+    "mqtt"
+  ],
+  "author": "",
+  "license": "ISC"
+}
