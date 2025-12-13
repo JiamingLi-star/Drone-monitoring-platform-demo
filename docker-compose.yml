@@ -1,0 +1,52 @@
+version: '3.9'
+
+services:
+  api:
+    build: .
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    environment:
+      HTTP_PORT: 3000
+      WS_PATH: /ws
+      WS_AUTH_TOKEN: demo-token
+      WS_RATE_LIMIT_MS: 250
+      CORS_ORIGIN: "*"
+      INFLUX_HOST: influxdb
+      INFLUX_PORT: 8086
+      INFLUX_PROTOCOL: http
+      INFLUX_ORG: demo-org
+      INFLUX_BUCKET: uas
+      INFLUX_TOKEN: demo-token
+    depends_on:
+      - influxdb
+
+  frontend:
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+      args:
+        VITE_WS_URL: ws://api:3000/ws?token=demo-token
+    ports:
+      - "5173:80"
+    depends_on:
+      - api
+
+  influxdb:
+    image: influxdb:2.7
+    ports:
+      - "8086:8086"
+    environment:
+      INFLUXDB_INIT_MODE: setup
+      INFLUXDB_INIT_USERNAME: demo
+      INFLUXDB_INIT_PASSWORD: demo-password
+      INFLUXDB_INIT_ORG: demo-org
+      INFLUXDB_INIT_BUCKET: uas
+      INFLUXDB_INIT_ADMIN_TOKEN: demo-token
+    volumes:
+      - influxdb-data:/var/lib/influxdb2
+      - ./examples/sample-lineprotocol.lp:/docker-entrypoint-initdb.d/sample-lineprotocol.lp:ro
+      - ./examples/init-influx.sh:/docker-entrypoint-initdb.d/init-influx.sh:ro
+
+volumes:
+  influxdb-data:

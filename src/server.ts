@@ -1,39 +1,43 @@
-import express from 'express';
-import cors from 'cors';
 import http from 'http';
 import { env } from './config/env';
-import { requestLogger } from './utils/logger';
-import healthRouter from './api/health';
-import { startWebSocketService } from './services/ws';
+import { createApp } from './app';
+import { startWebSocketService, stopWebSocketService } from './services/ws';
 
-const app = express();
+export interface ServerOptions {
+  port?: number;
+  wsPath?: string;
+  wsAuthToken?: string;
+  wsRateLimitMs?: number;
+}
 
-app.use(cors({ origin: env.corsOrigin }));
-app.use(express.json());
-app.use(requestLogger());
+export function createHttpServer(options: ServerOptions = {}) {
+  const app = createApp();
+  const server = http.createServer(app);
 
-app.use('/api', healthRouter);
+  startWebSocketService(server, {
+    path: options.wsPath ?? env.wsPath,
+    authToken: options.wsAuthToken ?? env.wsAuthToken,
+    rateLimitMs: options.wsRateLimitMs ?? env.wsRateLimitMs,
+  });
 
-app.get('/', (_req, res) => {
-  res.send('Drone Monitoring Platform API');
-});
+  return { app, server };
+}
 
-app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
-  // Basic error handler placeholder
-  // eslint-disable-next-line no-console
-  console.error('Unhandled error:', err);
-  res.status(500).json({ message: 'Internal Server Error' });
-});
+export function startServer(options: ServerOptions = {}) {
+  const { server } = createHttpServer(options);
+  const port = options.port ?? env.httpPort;
+  server.listen(port, () => {
+    // eslint-disable-next-line no-console
+    console.log(`Server listening on port ${port}`);
+  });
+  return server;
+}
 
-const server = http.createServer(app);
+export function stopServer(server: http.Server) {
+  stopWebSocketService();
+  server.close();
+}
 
-startWebSocketService(server, {
-  path: env.wsPath,
-  authToken: env.wsAuthToken,
-  rateLimitMs: env.wsRateLimitMs,
-});
-
-server.listen(env.httpPort, () => {
-  // eslint-disable-next-line no-console
-  console.log(`Server listening on port ${env.httpPort}`);
-});
+if (require.main === module) {
+  startServer();
+}

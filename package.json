@@ -5,8 +5,13 @@
   "main": "src/index.js",
   "type": "commonjs",
   "scripts": {
-    "start": "node src/index.js",
+    "start": "npm run start:server",
+    "start:server": "node --require ts-node/register src/server.ts",
+    "dev": "npm-run-all --parallel start:server client:dev",
     "test": "node --require ts-node/register --test",
+    "test:client": "vitest --run",
+    "lint": "tsc --noEmit",
+    "format": "prettier --write .",
     "client:dev": "vite --config client/vite.config.ts",
     "client:build": "vite build --config client/vite.config.ts",
     "client:preview": "vite preview --config client/vite.config.ts"
@@ -30,14 +35,21 @@
     "ws": "^8.18.0"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.1.0",
     "@types/leaflet": "^1.9.14",
     "@types/node": "^22.9.4",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@types/ws": "^8.5.13",
+    "jsdom": "^25.0.1",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^3.3.3",
+    "supertest": "^7.0.0",
     "@vitejs/plugin-react": "^5.2.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.3",
+    "vitest": "^2.1.4",
     "vite": "^5.4.10"
   }
 }
