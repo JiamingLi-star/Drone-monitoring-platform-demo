@@ -1,3 +1,4 @@
+require('ts-node/register');
 const http = require('http');
 const { handleRequest } = require('./api/router.js');
 const { startMqttSubscriber } = require('./services/mqtt.js');

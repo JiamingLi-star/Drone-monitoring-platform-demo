@@ -7,6 +7,16 @@
  * @property {number} [altitude] Altitude in meters.
  * @property {number} [groundSpeed] Ground speed in m/s.
  * @property {number} [heading] Heading in degrees.
+ * @property {number} [height] Height above ground level in meters.
+ * @property {number} [verticalSpeed] Vertical speed in m/s.
+ * @property {number} [course] Course over ground in degrees.
+ * @property {number} [batteryLevel] Remaining battery in percentage.
+ * @property {string} [orderId] Associated order identifier.
+ * @property {string} [sn] Airframe serial number.
+ * @property {string} [flightCode] Flight code or mission ID.
+ * @property {string} [manufacturerId] Manufacturer identifier.
+ * @property {string} [coordinateType] Coordinate reference system label.
+ * @property {string} [heightType] Height reference type (e.g., AGL).
  */
 
 /**

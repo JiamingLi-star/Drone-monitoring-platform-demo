@@ -1,3 +1,5 @@
+const { writeTelemetryPoint } = require('./influx');
+
 /**
  * Handle validated telemetry payload. Hook to downstream pipelines, logs, or storage.
  * @param {import('../types/telemetry.js').TelemetryPayload} payload
@@ -11,6 +13,16 @@ function processTelemetry(payload) {
 
   // eslint-disable-next-line no-console
   console.log('[telemetry]', normalizedTimestamp, JSON.stringify(payload));
+
+  const inflightWrite = writeTelemetryPoint({
+    ...payload,
+    course: payload.heading,
+  });
+
+  inflightWrite.catch((error) => {
+    // eslint-disable-next-line no-console
+    console.error('Failed to persist telemetry to InfluxDB:', error.message);
+  });
   return { message: 'Telemetry accepted for processing' };
 }
 
