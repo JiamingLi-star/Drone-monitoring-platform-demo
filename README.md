@@ -21,6 +21,24 @@ Or run everything at once:
 make dev             # runs API and frontend concurrently
 ```
 
+### Local testing (Windows/PowerShell tips)
+
+1. Ensure Node.js 18+ is installed (Node 22.x works; the npm warning about `@vitejs/plugin-react` is safe to ignore if Node is >=22.2.0).
+2. If `make` is unavailable, you can run the equivalent npm scripts directly:
+   ```pwsh
+   npm install
+   npm run start:server   # start API/WebSocket on port 3000
+   npm run client:dev     # start Vite dev server on port 5173
+   ```
+   Or keep using `make start` / `make dev` from Git Bash or WSL if you prefer.
+3. Send a sample telemetry request from PowerShell (no Bash required):
+   ```pwsh
+   ./scripts/curl-telemetry.ps1 -HostName localhost -Port 3000 -FilePath examples/telemetry.json
+   ```
+   You should see the JSON response echoed; use `-HostName`/`-Port` to point at a remote API.
+4. Connect a WebSocket client to `ws://localhost:3000/ws?token=demo-token` to see live telemetry echoes.
+
+
 ### Using Docker Compose
 
 ```bash
