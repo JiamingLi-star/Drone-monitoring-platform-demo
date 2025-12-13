@@ -1,34 +1,18 @@
 {
   "name": "drone-monitoring-platform-demo",
   "version": "1.0.0",
-  "description": "Backend scaffold for the drone monitoring platform demo using Express and TypeScript.",
-  "main": "dist/server.js",
+  "description": "Lightweight telemetry ingestion demo for UAS data.",
+  "main": "src/index.js",
+  "type": "commonjs",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "build": "tsc -p tsconfig.json",
-    "start": "node dist/server.js"
+    "start": "node src/index.js"
   },
   "keywords": [
-    "drone",
-    "monitoring",
-    "express",
-    "typescript"
+    "uas",
+    "telemetry",
+    "http",
+    "mqtt"
   ],
   "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "morgan": "^1.10.0"
-  },
-  "devDependencies": {
-    "@types/cors": "^2.8.17",
-    "@types/express": "^4.17.21",
-    "@types/morgan": "^1.9.9",
-    "@types/node": "^22.7.4",
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^5.6.3"
-  }
+  "license": "ISC"
 }
