@@ -8,6 +8,9 @@ interface EnvConfig {
   httpPort: number;
   wsPort: number;
   mqttPort: number;
+  wsAuthToken: string;
+  wsPath: string;
+  wsRateLimitMs: number;
   corsOrigin: string;
   influx: {
     host: string;
@@ -30,6 +33,9 @@ export const env: EnvConfig = {
   httpPort: parseNumber(process.env.HTTP_PORT, 3000),
   wsPort: parseNumber(process.env.WS_PORT, 3001),
   mqttPort: parseNumber(process.env.MQTT_PORT, 1883),
+  wsAuthToken: process.env.WS_AUTH_TOKEN || 'demo-token',
+  wsPath: process.env.WS_PATH || '/ws',
+  wsRateLimitMs: parseNumber(process.env.WS_RATE_LIMIT_MS, 250),
   corsOrigin: process.env.CORS_ORIGIN || '*',
   influx: {
     host: process.env.INFLUX_HOST || 'localhost',

@@ -1,4 +1,5 @@
 const { writeTelemetryPoint } = require('./influx');
+const { broadcastTelemetry } = require('./ws.ts');
 
 /**
  * Handle validated telemetry payload. Hook to downstream pipelines, logs, or storage.
@@ -22,6 +23,40 @@ function processTelemetry(payload) {
   inflightWrite.catch((error) => {
     // eslint-disable-next-line no-console
     console.error('Failed to persist telemetry to InfluxDB:', error.message);
+  });
+
+  broadcastTelemetry({
+    timestamp: normalizedTimestamp,
+    coordinates: {
+      latitude: payload.latitude,
+      longitude: payload.longitude,
+      altitude: payload.altitude,
+    },
+    trackStatus: payload.trackStatus,
+    motion: {
+      groundSpeed: payload.groundSpeed,
+      heading: payload.heading,
+    },
+    identifiers: {
+      orderId: payload.orderId,
+      sn: payload.sn,
+      flightCode: payload.flightCode,
+      manufacturerId: payload.manufacturerId,
+    },
+    power: {
+      level: payload.batteryLevel,
+      voltage: payload.batteryVoltage,
+      temperature: payload.batteryTemperature,
+      status: payload.batteryStatus,
+    },
+    weather: {
+      temperature: payload.temperature,
+      humidity: payload.humidity,
+      windSpeed: payload.windSpeed,
+      windDirection: payload.windDirection,
+      visibility: payload.visibility,
+      pressure: payload.pressure,
+    },
   });
   return { message: 'Telemetry accepted for processing' };
 }

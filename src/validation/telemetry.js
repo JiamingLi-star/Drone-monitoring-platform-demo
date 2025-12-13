@@ -48,6 +48,42 @@ function validateTelemetry(body) {
     errors.push('heading must be a number when provided.');
   }
 
+  if (payload.batteryLevel !== undefined && (!isFiniteNumber(payload.batteryLevel) || payload.batteryLevel < 0 || payload.batteryLevel > 100)) {
+    errors.push('batteryLevel must be between 0 and 100 when provided.');
+  }
+
+  if (payload.batteryVoltage !== undefined && !isFiniteNumber(payload.batteryVoltage)) {
+    errors.push('batteryVoltage must be a number when provided.');
+  }
+
+  if (payload.batteryTemperature !== undefined && !isFiniteNumber(payload.batteryTemperature)) {
+    errors.push('batteryTemperature must be a number when provided.');
+  }
+
+  if (payload.temperature !== undefined && !isFiniteNumber(payload.temperature)) {
+    errors.push('temperature must be a number when provided.');
+  }
+
+  if (payload.humidity !== undefined && (!isFiniteNumber(payload.humidity) || payload.humidity < 0 || payload.humidity > 100)) {
+    errors.push('humidity must be between 0 and 100 when provided.');
+  }
+
+  if (payload.windSpeed !== undefined && !isFiniteNumber(payload.windSpeed)) {
+    errors.push('windSpeed must be a number when provided.');
+  }
+
+  if (payload.windDirection !== undefined && !isFiniteNumber(payload.windDirection)) {
+    errors.push('windDirection must be a number when provided.');
+  }
+
+  if (payload.visibility !== undefined && !isFiniteNumber(payload.visibility)) {
+    errors.push('visibility must be a number when provided.');
+  }
+
+  if (payload.pressure !== undefined && !isFiniteNumber(payload.pressure)) {
+    errors.push('pressure must be a number when provided.');
+  }
+
   return {
     valid: errors.length === 0,
     errors,
