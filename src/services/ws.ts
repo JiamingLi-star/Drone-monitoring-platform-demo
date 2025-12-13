@@ -113,6 +113,22 @@ export function startWebSocketService(server: HttpServer, options: Partial<WebSo
   return wsServer;
 }
 
+export function stopWebSocketService() {
+  if (!wsServer) return;
+  wsServer.clients.forEach((socket) => socket.terminate());
+  wsServer.close();
+  wsServer.removeAllListeners();
+  wsServer = null;
+  clients.clear();
+  if (debounceTimer) {
+    clearTimeout(debounceTimer);
+    debounceTimer = null;
+  }
+  pendingPayload = null;
+  lastBroadcastAt = 0;
+  currentOptions = defaultOptions;
+}
+
 /**
  * Broadcast telemetry to all connected clients with simple rate limiting/debounce.
  */

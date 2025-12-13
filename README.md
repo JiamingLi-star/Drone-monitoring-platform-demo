@@ -1,41 +1,109 @@
 # Drone Monitoring Platform Demo
 
-This repository exposes a minimal HTTP entrypoint for drone (UAS) telemetry ingestion, plus an optional MQTT subscriber that reuses the same validation and processing pipeline.
+Lightweight telemetry ingestion and visualization stack that exposes an HTTP API, WebSocket stream, and a React dashboard for UAV monitoring. Use the provided Docker Compose file to launch the API, WebSocket gateway, InfluxDB storage, and frontend in one step.
+
+## Prerequisites
+
+- Node.js 18+ and npm
+- Docker + Docker Compose (for containerized usage)
+
+## Quick start
+
+```bash
+make install
+make start           # starts the API/WebSocket server on port 3000
+npm run client:dev   # starts the Vite dev server on port 5173
+```
+
+Or run everything at once:
+
+```bash
+make dev             # runs API and frontend concurrently
+```
+
+### Using Docker Compose
+
+```bash
+make docker-up
+```
+
+This builds and starts:
+- **api**: Node/Express server with WebSocket streaming
+- **frontend**: Static React dashboard served by Nginx
+- **influxdb**: Pre-configured InfluxDB 2.7 instance with sample data
+
+Use `make docker-down` to stop and remove containers. Example line-protocol data is seeded from `examples/sample-lineprotocol.lp` via `examples/init-influx.sh`.
+
+## Environment variables
+
+| Variable | Default | Description |
+| --- | --- | --- |
+| `HTTP_PORT` | `3000` | HTTP API listening port |
+| `WS_PATH` | `/ws` | WebSocket upgrade path |
+| `WS_AUTH_TOKEN` | `demo-token` | Token required via `Sec-WebSocket-Protocol` header or `?token=` query |
+| `WS_RATE_LIMIT_MS` | `250` | Broadcast rate limit window |
+| `CORS_ORIGIN` | `*` | Allowed CORS origin(s) |
+| `INFLUX_HOST` | `localhost` | InfluxDB host |
+| `INFLUX_PORT` | `8086` | InfluxDB port |
+| `INFLUX_PROTOCOL` | `http` | InfluxDB protocol |
+| `INFLUX_ORG` | `your-org` | InfluxDB organization |
+| `INFLUX_BUCKET` | `your-bucket` | Target bucket for telemetry |
+| `INFLUX_TOKEN` | `your-token` | InfluxDB token |
 
 ## HTTP API
 
 - **Endpoint**: `POST /api/v1/uas/telemetry`
 - **Content-Type**: `application/json`
-- **Required fields**:
-  - `timestamp` (ISO 8601 string or epoch milliseconds)
-  - `latitude` (decimal degrees between -90 and 90)
-  - `longitude` (decimal degrees between -180 and 180)
-  - `trackStatus` (non-empty string describing the flight/track state)
+- **Required fields**: `timestamp`, `latitude`, `longitude`, `trackStatus`
 - **Optional fields**: `altitude`, `groundSpeed`, `heading`
-- **Response shape**: `{ success: boolean, code?: number, errorCode?: string, errorMsg?: string, data?: object }`
 
-Example request body lives in [`examples/telemetry.json`](examples/telemetry.json).
-
-### Running the server
-
-```bash
-npm start
-```
-
-The server listens on `PORT` (default `3000`). Set `MQTT_BROKER_URL` and optional `MQTT_TOPIC` to enable MQTT subscription.
-
-### Quick test with curl
+Example payload lives in [`examples/telemetry.json`](examples/telemetry.json). Test with:
 
 ```bash
 ./scripts/curl-telemetry.sh
-```
-
-Override the target host or port with environment variables:
-
-```bash
+# or
 HOST=127.0.0.1 PORT=4000 ./scripts/curl-telemetry.sh
 ```
 
-## MQTT (optional)
+Health check endpoint is available at `GET /api/health`.
 
-If the `mqtt` package is available and `MQTT_BROKER_URL` is defined, the application will subscribe to the configured topic (default `uas/telemetry`) and feed messages through the same validation and processing pipeline used by the HTTP endpoint.
+## WebSocket stream
+
+- **URL**: `ws://<host>:<port><WS_PATH>` (default `ws://localhost:3000/ws`)
+- **Auth**: supply `Sec-WebSocket-Protocol: <WS_AUTH_TOKEN>` header or `?token=<WS_AUTH_TOKEN>` query param
+- **Messages**:
+  - Server sends `{ "type": "welcome", "timestamp": "..." }` on connect
+  - Broadcast telemetry payloads arrive as `{ "type": "telemetry", "payload": { ... } }`
+
+Example connection using Node/WebSocket:
+
+```js
+const ws = new WebSocket('ws://localhost:3000/ws?token=demo-token');
+ws.onmessage = (event) => console.log(event.data);
+```
+
+## Frontend
+
+The React dashboard (Vite) connects to the WebSocket stream and offers a simulation toggle. Configure the WebSocket URL via `VITE_WS_URL` (defaults to `ws://localhost:3000/ws?token=demo-token`).
+
+Build and preview production assets:
+
+```bash
+npm run client:build
+npm run client:preview -- --host 0.0.0.0 --port 4173
+```
+
+## Testing & quality
+
+- **Backend/unit**: `npm test` (Node test runner with ts-node)
+- **Frontend/unit**: `npm run test:client` (Vitest + Testing Library)
+- **Type check**: `npm run lint`
+- **Format**: `npm run format`
+
+Make targets mirror these npm scripts for convenience.
+
+## Sample data
+
+- `examples/telemetry.json`: HTTP payload example
+- `examples/sample-lineprotocol.lp`: InfluxDB line-protocol seeded in Docker Compose
+- `examples/ws-client.js`: Minimal WebSocket consumer

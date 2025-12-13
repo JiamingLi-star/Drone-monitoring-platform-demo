@@ -10,4 +10,10 @@ export default defineConfig({
   build: {
     outDir: '../dist-client',
   },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/test/setup.ts',
+    css: true,
+  },
 });
