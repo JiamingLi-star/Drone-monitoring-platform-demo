@@ -1,0 +1,236 @@
+:root {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.5;
+  color: #0f172a;
+  background-color: #0f172a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(circle at 20% 20%, rgba(108, 92, 231, 0.08), transparent 40%),
+    radial-gradient(circle at 80% 0%, rgba(45, 212, 191, 0.08), transparent 35%),
+    #0f172a;
+  color: #e2e8f0;
+  min-height: 100vh;
+}
+
+.page {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 32px 24px 56px;
+}
+
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 24px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(76, 63, 240, 0.2), rgba(14, 165, 233, 0.18));
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  box-shadow: 0 24px 40px rgba(0, 0, 0, 0.22);
+}
+
+.eyebrow {
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #a5b4fc;
+  font-weight: 600;
+  margin: 0 0 6px;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: 32px;
+  color: #f8fafc;
+}
+
+.lede {
+  margin: 8px 0 0;
+  max-width: 720px;
+  color: #cbd5e1;
+}
+
+.mode-toggle {
+  display: flex;
+  gap: 8px;
+}
+
+.mode-toggle button {
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: rgba(148, 163, 184, 0.1);
+  color: #e2e8f0;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.mode-toggle .active {
+  background: linear-gradient(135deg, #6c5ce7, #3b82f6);
+  border-color: transparent;
+  box-shadow: 0 10px 30px rgba(59, 130, 246, 0.25);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 18px;
+  margin-top: 20px;
+}
+
+.panel {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 16px;
+  padding: 16px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.25);
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.panel-header h2 {
+  margin: 0;
+  color: #f8fafc;
+  font-size: 18px;
+}
+
+.pill {
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.26);
+  background: rgba(148, 163, 184, 0.12);
+  color: #e2e8f0;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.pill.ghost {
+  background: transparent;
+  color: #cbd5e1;
+}
+
+.pill.status-live {
+  border-color: rgba(16, 185, 129, 0.5);
+  background: rgba(16, 185, 129, 0.16);
+  color: #a7f3d0;
+}
+
+.pill.status-connecting {
+  border-color: rgba(234, 179, 8, 0.5);
+  background: rgba(234, 179, 8, 0.12);
+  color: #fef9c3;
+}
+
+.pill.status-error {
+  border-color: rgba(239, 68, 68, 0.5);
+  background: rgba(239, 68, 68, 0.12);
+  color: #fecdd3;
+}
+
+.map-panel {
+  min-height: 520px;
+}
+
+.map {
+  width: 100%;
+  height: 500px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.status-pill {
+  padding: 8px 10px;
+  background: rgba(15, 23, 42, 0.8);
+  color: #f8fafc;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.26);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+}
+
+.heading-arrow {
+  color: #22d3ee;
+  filter: drop-shadow(0 6px 10px rgba(34, 211, 238, 0.3));
+}
+
+.info-panel .timestamp {
+  color: #cbd5e1;
+  font-size: 13px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.card {
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: rgba(226, 232, 240, 0.06);
+}
+
+.card.accent {
+  border-color: rgba(99, 102, 241, 0.7);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.18), rgba(56, 189, 248, 0.12));
+}
+
+.card .label {
+  margin: 0 0 6px;
+  color: #cbd5e1;
+  font-size: 13px;
+}
+
+.card .value {
+  margin: 0;
+  color: #f8fafc;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+button.secondary {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px dashed rgba(148, 163, 184, 0.4);
+  background: rgba(148, 163, 184, 0.1);
+  color: #e2e8f0;
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.15s ease;
+}
+
+button.secondary:hover {
+  border-color: rgba(99, 102, 241, 0.8);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 960px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    flex-direction: column;
+  }
+}
