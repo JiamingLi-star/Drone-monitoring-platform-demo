@@ -1,8 +1,10 @@
 import express from 'express';
 import cors from 'cors';
+import http from 'http';
 import { env } from './config/env';
 import { requestLogger } from './utils/logger';
 import healthRouter from './api/health';
+import { startWebSocketService } from './services/ws';
 
 const app = express();
 
@@ -23,7 +25,15 @@ app.use((err: Error, _req: express.Request, res: express.Response, _next: expres
   res.status(500).json({ message: 'Internal Server Error' });
 });
 
-app.listen(env.httpPort, () => {
+const server = http.createServer(app);
+
+startWebSocketService(server, {
+  path: env.wsPath,
+  authToken: env.wsAuthToken,
+  rateLimitMs: env.wsRateLimitMs,
+});
+
+server.listen(env.httpPort, () => {
   // eslint-disable-next-line no-console
   console.log(`Server listening on port ${env.httpPort}`);
 });
