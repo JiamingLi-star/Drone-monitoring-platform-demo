@@ -87,7 +87,7 @@ export function startWebSocketService(server: HttpServer, options: Partial<WebSo
       return;
     }
 
-    socket.isAlive = true;
+    (socket as any).isAlive = true;
     clients.set(socket, { lastSeen: Date.now(), lastSent: 0 });
 
     socket.on('pong', () => markAlive(socket));
@@ -98,11 +98,11 @@ export function startWebSocketService(server: HttpServer, options: Partial<WebSo
 
   const heartbeat = setInterval(() => {
     for (const [socket, meta] of clients.entries()) {
-      if (!socket.isAlive) {
+      if (!(socket as any).isAlive) {
         socket.terminate();
         clients.delete(socket);
       } else {
-        socket.isAlive = false;
+        (socket as any).isAlive = false;
         meta.lastSeen = Date.now();
         socket.ping();
       }
