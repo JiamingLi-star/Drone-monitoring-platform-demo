@@ -35,7 +35,7 @@ npm run client:dev       # 启动前端 Vite，默认端口 5173
 make dev
 ```
 
-### 本地开发（Windows，无 make）
+### 本地开发（Windows）
 **进入项目目录**（每次都要）：`cd D:\中山大学测试\Drone-monitoring-platform-demo`
 
 1. 打开 PowerShell 窗口 1，启动后端（3000）：
